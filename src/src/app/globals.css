@@ -1,0 +1,36 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+  font-family: 'CustomFont', Arial, Helvetica, sans-serif;
+  overflow: hidden; /* 화면 스크롤 방지 */
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* 기존 폰트 설정 */
+@font-face {
+  font-family: 'CustomFont';
+  src: url('../fonts/danjo.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+
