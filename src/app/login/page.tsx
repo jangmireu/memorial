@@ -6,23 +6,34 @@ import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
   const [authCode, setAuthCode] = useState<string | null>(null);
+  const [alertShown, setAlertShown] = useState<boolean>(false);  // 알림 상태 추가
   const router = useRouter();
 
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
+    const params = new URL(window.location.href).searchParams;
+    const message = params.get("message");
 
-    // 기존 사용자 정보가 없을 경우 Authorization Code 처리
-    if (!storedUser) {
-      const code = new URL(window.location.href).searchParams.get("code");
+    // 로그인이 필요한 경우 알림 (한 번만 실행)
+    if (message === "login_required" && !alertShown) {
+      alert("로그인이 필요한 페이지입니다.");
+      setAlertShown(true);  // 알림 상태 업데이트
+      // URL에서 쿼리 파라미터 제거
+      const url = new URL(window.location.href);
+      url.searchParams.delete("message");
+      window.history.replaceState({}, "", url.toString());
+    }
+
+    if (storedUser) {
+      router.push("/");
+    } else {
+      const code = params.get("code");
       if (code) {
         setAuthCode(code);
         handleKakaoLogin(code);
       }
-    } else {
-      // 사용자 정보가 있으면 바로 메인으로 리디렉트
-      router.push("/");
     }
-  }, []);
+  }, [alertShown, router]);
 
   const handleKakaoLogin = async (code: string) => {
     try {
