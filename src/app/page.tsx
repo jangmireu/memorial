@@ -80,7 +80,7 @@ export default function HomePage() {
       <section className="relative w-screen h-screen bg-stone-600">
         <div className="w-screen h-screen flex flex-col items-center justify-center bg-gray-200">
           <Image src="/images/flower.png" alt="추모 국화" width={700} height={600} objectFit="contain" />
-          <h1 className="text-3xl font-bold mt-10 text-center leading-relaxed">
+          <h1 className="text-3xl font-bold mt-10 text-center leading-relaxed {children}">
             여객기 참사로 희생된 모든 분들을 깊이 추모합니다
           </h1>
         </div>
@@ -91,6 +91,7 @@ export default function HomePage() {
         <h2 className="text-4xl font-bold mt-5">{count.toLocaleString()}명이 함께 하고 있습니다</h2>
 
         <MemorialButton clicked={clicked} handleClick={handleClick} />
+        <br />
         <a href="https://map.kakao.com/?q=합동분향소" target="_blank" rel="noopener noreferrer">
           <button className="bg-gray-300 text-gray-600 mt-5 cursor-pointer w-[240px] h-[50px] mx-auto text-[18px] leading-[50px] rounded-[8px]">
             합동 분향소
