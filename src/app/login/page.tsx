@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import KakaoLoginButton from "@/components/KakaoLoginButton";
 import { useRouter } from "next/navigation";
+import TearBackground from '@/components/TearEffect/TearBackground';
 
 export default function LoginPage() {
   const [authCode, setAuthCode] = useState<string | null>(null);
@@ -58,9 +59,11 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-      <h1 className="text-3xl font-bold mb-8">로그인</h1>
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-500">
+      <h1 className="text-5xl font-bold mb-8 mt-12 " >추모 게시판</h1>
+      <TearBackground />
       <KakaoLoginButton />
     </div>
   );
+  
 }
