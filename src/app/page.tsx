@@ -164,7 +164,7 @@ export default function HomePage() {
 
       {showPopup && (
         <div className="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-50">
-          <div className="bg-white p-10 rounded-lg text-center">
+          <div className="bg-white p-10 rounded-lg shadow-lg text-center max-w-lg flex flex-col justify-center items-center">
             <Image
               src="/images/flower.png"
               alt="국화 이미지"
@@ -174,6 +174,11 @@ export default function HomePage() {
             <h2 className="text-3xl font-bold mt-8">
               추모에 참여해주셔서 감사합니다
             </h2>
+            <p className="text-gray-500 mt-4 text-sm leading-relaxed">
+              *참여 숫자는 카카오톡 ID 기준으로 1회만 집계되며, 추모 국화 달기는
+              중복 참여 가능합니다.
+            </p>
+          
             <button
               onClick={() => setShowPopup(false)}
               className="bg-black text-white px-8 py-3 mt-8 rounded-lg"
