@@ -164,7 +164,7 @@ export default function HomePage() {
 
       {showPopup && (
         <div className="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-50">
-          <div className="bg-white p-10 rounded-lg text-center">
+          <div className="bg-white p-10 rounded-lg shadow-lg text-center max-w-lg flex flex-col justify-center items-center">
             <Image
               src="/images/flower.png"
               alt="국화 이미지"
