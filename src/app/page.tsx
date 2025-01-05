@@ -16,10 +16,8 @@ export default function HomePage() {
   const [clicked, setClicked] = useState(false);
   const [showPopup, setShowPopup] = useState(false); 
   const [nicknames, setNicknames] = useState<string[]>([
-    "kimchi***", "seo***", "park***", "jang***", "uiui***",
-    "totos***", "youn***", "dsds***", "wu24***", "yoiw12***",
-    "bbwef23***", "oiwe254***", "sdd2221***", "112fsd***",
-    "xdd232***", "sdfsd2***", "ass245***", "sdf212***", "bbtb2424***",
+    "김지수", "김철수", "신용재", "임한별", "허각",
+    "김민재", "황희찬", "손흥민", "벤", "윤민수"
   ]);
   const [darkMode, setDarkMode] = useState(false);
   const [user, setUser] = useState<any>(null);
@@ -56,6 +54,26 @@ export default function HomePage() {
       setClicked(true);
     }
   }, [router]);
+  //무한롤링(배너)에 10개의 임의의 하드코딩된 닉네임을 띄우고 그곳에 DB에서 가져온 사용자 닉네임 추가 하는 로직
+  useEffect(() => {
+    const fetchNicknames = async () => {
+      try {
+        const response = await fetch("/api/tribute");
+        const data = await response.json();
+        
+        // 새로운 닉네임 목록
+        const newNicknames = data.map((item: { nickname: string }) => item.nickname);
+  
+        // 기존 10개의 닉네임 + 새로운 닉네임 목록
+        setNicknames((prev) => [...prev, ...newNicknames]);
+      } catch (error) {
+        console.error("닉네임 불러오기 실패", error);
+      }
+    };
+  
+    fetchNicknames();
+  }, []);
+  
 
   // 추모 버튼 클릭 핸들러
   const handleClick = async () => {
@@ -63,26 +81,30 @@ export default function HomePage() {
       alert("오늘은 이미 추모 국화를 달았습니다.");
       return;
     }
-
+  
     try {
-      const response = await fetch("/api/counter", {
-        method: "POST",
-      });
-
+      const response = await fetch("/api/counter", { method: "POST" });
+  
       if (response.ok) {
         const data = await response.json();
-        setCount(data.newCount);  
+        setCount(data.newCount);
         setClicked(true);
         setShowPopup(true);
-
+  
         const today = new Date().toISOString().split("T")[0];
         localStorage.setItem("lastClicked", today);
-
+  
         if (user && user.nickname) {
-          setNicknames((prevNicknames) => {
-            const updatedNicknames = [user.nickname, ...prevNicknames];
-            console.log("닉네임 추가됨:", updatedNicknames);
-            return updatedNicknames;
+          setNicknames((prevNicknames) => [user.nickname, ...prevNicknames]);
+  
+          // 서버에 사용자 ID와 닉네임 저장
+          await fetch("/api/tribute", {
+            method: "POST",
+            body: JSON.stringify({
+              userId: user.id,
+              nickname: user.nickname,
+            }),
+            headers: { "Content-Type": "application/json" },
           });
         }
       } else {
@@ -93,6 +115,8 @@ export default function HomePage() {
       console.error("POST 요청 실패", error);
     }
   };
+  
+  
 
   const toggleDarkMode = () => {
     setDarkMode(!darkMode);

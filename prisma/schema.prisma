@@ -1,0 +1,31 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model Counter {
+  id    Int @id @default(autoincrement())
+  count Int
+}
+
+model User {
+  id       Int     @id @default(autoincrement())
+  kakaoId  String  @unique
+  email    String?
+  nickname String
+
+  tributes Tribute[] // Tribute와 1:N 관계 설정
+}
+
+model Tribute {
+  id        Int      @id @default(autoincrement())
+  nickname  String
+  userId    Int
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+}
