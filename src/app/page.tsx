@@ -14,31 +14,30 @@ const LOGOUT_REDIRECT_URI = "http://localhost:3000/login";
 export default function HomePage() {
   const [count, setCount] = useState(703055);
   const [clicked, setClicked] = useState(false);
-  const [showPopup, setShowPopup] = useState(false); // 팝업 상태 추가
+  const [showPopup, setShowPopup] = useState(false); 
   const [nicknames, setNicknames] = useState<string[]>([
-    "kimchi***",
-    "seo***",
-    "park***",
-    "jang***",
-    "uiui***",
-    "totos***",
-    "youn***",
-    "dsds***",
-    "wu24***",
-    "yoiw12***",
-    "bbwef23***",
-    "oiwe254***",
-    "sdd2221***",
-    "112fsd***",
-    "xdd232***",
-    "sdfsd2***",
-    "ass245***",
-    "sdf212***",
-    "bbtb2424***",
+    "kimchi***", "seo***", "park***", "jang***", "uiui***",
+    "totos***", "youn***", "dsds***", "wu24***", "yoiw12***",
+    "bbwef23***", "oiwe254***", "sdd2221***", "112fsd***",
+    "xdd232***", "sdfsd2***", "ass245***", "sdf212***", "bbtb2424***",
   ]);
   const [darkMode, setDarkMode] = useState(false);
   const [user, setUser] = useState<any>(null);
   const router = useRouter();
+
+  // 서버에서 초기 카운트 불러오기
+  useEffect(() => {
+    const fetchCount = async () => {
+      try {
+        const response = await fetch("/api/counter");
+        const data = await response.json();
+        setCount(data.currentCount);
+      } catch (error) {
+        console.error("카운트 불러오기 실패", error);
+      }
+    };
+    fetchCount();
+  }, []);
 
   // 유저 정보 및 상태 초기화
   useEffect(() => {
@@ -58,34 +57,42 @@ export default function HomePage() {
     }
   }, [router]);
 
-  // 추모하기 버튼 핸들러
-  const handleClick = () => {
+  // 추모 버튼 클릭 핸들러
+  const handleClick = async () => {
     if (clicked) {
       alert("오늘은 이미 추모 국화를 달았습니다.");
       return;
     }
 
-    // 유저 닉네임을 닉네임 리스트에 추가
-    if (user && user.nickname) {
-      setNicknames((prevNicknames) => {
-        const updatedNicknames = [user.nickname, ...prevNicknames];
-        console.log("닉네임 추가됨:", updatedNicknames);
-        return updatedNicknames;
+    try {
+      const response = await fetch("/api/counter", {
+        method: "POST",
       });
+
+      if (response.ok) {
+        const data = await response.json();
+        setCount(data.newCount);  
+        setClicked(true);
+        setShowPopup(true);
+
+        const today = new Date().toISOString().split("T")[0];
+        localStorage.setItem("lastClicked", today);
+
+        if (user && user.nickname) {
+          setNicknames((prevNicknames) => {
+            const updatedNicknames = [user.nickname, ...prevNicknames];
+            console.log("닉네임 추가됨:", updatedNicknames);
+            return updatedNicknames;
+          });
+        }
+      } else {
+        alert("서버에서 문제가 발생했습니다.");
+      }
+    } catch (error) {
+      alert("네트워크 오류가 발생했습니다.");
+      console.error("POST 요청 실패", error);
     }
-
-    setCount((prevCount) => prevCount + 1);
-    setClicked(true);
-    setShowPopup(true);
-
-    const today = new Date().toISOString().split("T")[0];
-    localStorage.setItem("lastClicked", today);
   };
-
-  // 닉네임 업데이트 확인용
-  useEffect(() => {
-    console.log("닉네임 업데이트됨:", nicknames);
-  }, [nicknames]);
 
   const toggleDarkMode = () => {
     setDarkMode(!darkMode);
@@ -126,11 +133,7 @@ export default function HomePage() {
             height={600}
             objectFit="contain"
           />
-          <h1
-            className={`text-3xl font-bold mt-10 text-center leading-relaxed ${
-              darkMode ? "text-black" : "text-black"
-            }`}
-          >
+          <h1 className="text-3xl font-bold mt-10 text-center">
             여객기 참사로 희생된 모든 분들을 깊이 추모합니다
           </h1>
         </div>
@@ -149,35 +152,28 @@ export default function HomePage() {
           target="_blank"
           rel="noopener noreferrer"
         >
-          <button className="bg-gray-300 text-black-600 mt-5 cursor-pointer w-[240px] h-[50px] mx-auto text-[18px] leading-[50px] rounded-[8px]">
+          <button className="bg-gray-300 mt-5 w-[240px] h-[50px] rounded">
             합동 분향소
           </button>
         </a>
 
-        {/* 배너 공백 조정 */}
         <div className="pt-16 pb-16">
           <NicknameRoller nicknames={nicknames} />
         </div>
       </section>
 
-      {/* 팝업 모달 */}
       {showPopup && (
         <div className="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-50">
-          <div className="bg-white p-10 rounded-lg shadow-lg text-center max-w-lg flex flex-col justify-center items-center">
+          <div className="bg-white p-10 rounded-lg text-center">
             <Image
               src="/images/flower.png"
               alt="국화 이미지"
               width={250}
               height={250}
             />
-            <h2 className="text-3xl font-bold mt-8 text-black dark:text-white">
+            <h2 className="text-3xl font-bold mt-8">
               추모에 참여해주셔서 감사합니다
             </h2>
-
-            <p className="text-gray-500 mt-4 text-sm leading-relaxed">
-              *참여 숫자는 카카오톡 ID 기준으로 1회만 집계되며, 추모 국화 달기는
-              중복 참여 가능합니다.
-            </p>
             <button
               onClick={() => setShowPopup(false)}
               className="bg-black text-white px-8 py-3 mt-8 rounded-lg"
