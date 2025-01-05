@@ -1,12 +1,13 @@
 import { NextResponse } from "next/server";
+import prisma from "@/lib/prisma";  // Prisma 클라이언트 불러오기
 
 export async function POST(req: Request) {
   const { code } = await req.json();
-  const REST_API_KEY = "e1bc3c4db3a86b3b347d08cef1f2a65c";  // 정확한 REST API 키
-  const REDIRECT_URI = "http://localhost:3000/login";
+  const REST_API_KEY = process.env.KAKAO_REST_API_KEY || "e1bc3c4db3a86b3b347d08cef1f2a65c";
+  const REDIRECT_URI = process.env.KAKAO_REDIRECT_URI || "http://localhost:3000/login";
 
   try {
-    console.log("전달된 Authorization Code:", code);  // 전달된 코드 확인
+    console.log("전달된 Authorization Code:", code);
     console.log("REST API KEY:", REST_API_KEY);
     console.log("Redirect URI:", REDIRECT_URI);
 
@@ -22,18 +23,19 @@ export async function POST(req: Request) {
           grant_type: "authorization_code",
           client_id: REST_API_KEY,
           redirect_uri: REDIRECT_URI,
-          code: code,  // 인증 코드 전달
+          code: code,
         }),
       }
     );
 
-    const tokenData = await tokenResponse.json();
-    console.log("토큰 데이터 응답:", tokenData);  // 토큰 응답 확인
-
-    if (tokenData.error) {
-      console.error("토큰 발급 실패:", tokenData.error_description);
-      return NextResponse.json({ success: false, error: tokenData.error_description });
+    if (!tokenResponse.ok) {
+      const errorData = await tokenResponse.json();
+      console.error("토큰 발급 실패:", errorData.error_description || "알 수 없는 오류");
+      return NextResponse.json({ success: false, error: errorData.error_description || "토큰 발급 실패" });
     }
+
+    const tokenData = await tokenResponse.json();
+    console.log("토큰 데이터 응답:", tokenData);
 
     // 사용자 정보 요청
     const userInfoResponse = await fetch(
@@ -47,12 +49,33 @@ export async function POST(req: Request) {
       }
     );
 
+    if (!userInfoResponse.ok) {
+      console.error("사용자 정보 요청 실패");
+      return NextResponse.json({ success: false, error: "사용자 정보를 불러오는데 실패했습니다." });
+    }
+
     const userInfo = await userInfoResponse.json();
-    console.log("사용자 정보:", userInfo);  // 사용자 정보 확인
+    console.log("사용자 정보:", userInfo);
+
+    // Prisma를 사용해 DB에 유저 정보 저장 (카카오 ID 기준으로 upsert)
+    const user = await prisma.user.upsert({
+      where: { kakaoId: String(userInfo.id) },
+      update: {
+        email: userInfo.kakao_account?.email,
+        nickname: userInfo.properties?.nickname,
+      },
+      create: {
+        kakaoId: String(userInfo.id),
+        email: userInfo.kakao_account?.email,
+        nickname: userInfo.properties?.nickname,
+      },
+    });
+
+    console.log("DB에 저장된 사용자 정보:", user);
 
     return NextResponse.json({
       success: true,
-      user: userInfo,
+      user,
     });
   } catch (error) {
     console.error("API 요청 실패:", error);

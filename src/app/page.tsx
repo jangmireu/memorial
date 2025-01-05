@@ -57,32 +57,51 @@ export default function HomePage() {
     }
   }, [router]);
 
+  useEffect(() => {
+    const fetchNicknames = async () => {
+      try {
+        const response = await fetch("/api/tribute");
+        const data = await response.json();
+        const nicknameList = data.map((item: { nickname: string }) => item.nickname);
+        setNicknames(nicknameList);
+      } catch (error) {
+        console.error("닉네임 불러오기 실패", error);
+      }
+    };
+    fetchNicknames();
+  }, []);
+  
+
   // 추모 버튼 클릭 핸들러
   const handleClick = async () => {
     if (clicked) {
       alert("오늘은 이미 추모 국화를 달았습니다.");
       return;
     }
-
+  
     try {
-      const response = await fetch("/api/counter", {
-        method: "POST",
-      });
-
+      const response = await fetch("/api/counter", { method: "POST" });
+  
       if (response.ok) {
         const data = await response.json();
-        setCount(data.newCount);  
+        setCount(data.newCount);
         setClicked(true);
         setShowPopup(true);
-
+  
         const today = new Date().toISOString().split("T")[0];
         localStorage.setItem("lastClicked", today);
-
+  
         if (user && user.nickname) {
-          setNicknames((prevNicknames) => {
-            const updatedNicknames = [user.nickname, ...prevNicknames];
-            console.log("닉네임 추가됨:", updatedNicknames);
-            return updatedNicknames;
+          setNicknames((prevNicknames) => [user.nickname, ...prevNicknames]);
+  
+          // 서버에 사용자 ID와 닉네임 저장
+          await fetch("/api/tribute", {
+            method: "POST",
+            body: JSON.stringify({
+              userId: user.id,
+              nickname: user.nickname,
+            }),
+            headers: { "Content-Type": "application/json" },
           });
         }
       } else {
@@ -93,6 +112,8 @@ export default function HomePage() {
       console.error("POST 요청 실패", error);
     }
   };
+  
+  
 
   const toggleDarkMode = () => {
     setDarkMode(!darkMode);
