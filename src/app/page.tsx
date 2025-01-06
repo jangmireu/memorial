@@ -133,7 +133,7 @@ export default function HomePage() {
             height={600}
             objectFit="contain"
           />
-          <h1 className="text-3xl font-bold mt-10 text-center">
+          <h1 className="text-3xl font-bold mt-10 text-center text-black dark:text-black">
             여객기 참사로 희생된 모든 분들을 깊이 추모합니다
           </h1>
         </div>
