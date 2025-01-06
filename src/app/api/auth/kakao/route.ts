@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 export async function POST(req: Request) {
   const { code } = await req.json();
   const REST_API_KEY = "e1bc3c4db3a86b3b347d08cef1f2a65c";  // 정확한 REST API 키
-  const REDIRECT_URI = "http://localhost:3000/login";
+  const REDIRECT_URI = "https://jpmemorial-project.vercel.app/login";
 
   try {
     console.log("전달된 Authorization Code:", code);  // 전달된 코드 확인
