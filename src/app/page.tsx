@@ -12,40 +12,39 @@ const REST_API_KEY = "e1bc3c4db3a86b3b347d08cef1f2a65c";
 const LOGOUT_REDIRECT_URI = "https://jpmemorial-project.vercel.app/login";
 
 export default function HomePage() {
-  const [count, setCount] = useState(703055);
-  const [clicked, setClicked] = useState(false);
-  const [showPopup, setShowPopup] = useState(false); 
-  const [nicknames, setNicknames] = useState<string[]>([
-    "kimchi***", "seo***", "park***", "jang***", "uiui***",
-    "totos***", "youn***", "dsds***", "wu24***", "yoiw12***",
-    "bbwef23***", "oiwe254***", "sdd2221***", "112fsd***",
-    "xdd232***", "sdfsd2***", "ass245***", "sdf212***", "bbtb2424***",
-  ]);
-  const [darkMode, setDarkMode] = useState(false);
-  const [user, setUser] = useState<any>(null);
+  const [count, setCount] = useState(0); // 참여 카운트 초기화
+  const [clicked, setClicked] = useState(false); // 추모 버튼 클릭 여부
+  const [showPopup, setShowPopup] = useState(false); // 팝업 표시 여부
+  const [nicknames, setNicknames] = useState<string[]>([]); // 닉네임 리스트
+  const [darkMode, setDarkMode] = useState(false); // 다크 모드 상태
+  const [user, setUser] = useState<any>(null); // 현재 로그인 사용자 정보
   const router = useRouter();
 
-  // 서버에서 초기 카운트 불러오기
+  // 초기 데이터 불러오기: 참여 카운트와 닉네임 리스트
   useEffect(() => {
-    const fetchCount = async () => {
+    const fetchInitialData = async () => {
       try {
-        const response = await fetch("/api/counter");
-        const data = await response.json();
-        setCount(data.currentCount);
+        // 참여 카운트 가져오기
+        const countResponse = await fetch("/api/counter");
+        const countData = await countResponse.json();
+        setCount(countData.currentCount);
+
+        // 닉네임 리스트 가져오기
+        const nicknameResponse = await fetch("/api/memorial");
+        const nicknameData = await nicknameResponse.json();
+        setNicknames(nicknameData);
       } catch (error) {
-        console.error("카운트 불러오기 실패", error);
+        console.error("데이터 불러오기 실패:", error);
       }
     };
-    fetchCount();
+    fetchInitialData();
   }, []);
 
-  // 유저 정보 및 상태 초기화
+  // 사용자 상태 초기화
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
-
     if (storedUser) {
-      const parsedUser = JSON.parse(storedUser);
-      setUser(parsedUser);
+      setUser(JSON.parse(storedUser));
     } else {
       router.push("/login?message=login_required");
     }
@@ -65,39 +64,36 @@ export default function HomePage() {
     }
 
     try {
-      const response = await fetch("/api/counter", {
+      const response = await fetch("/api/memorial", {
         method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userId: user.id }),
       });
 
       if (response.ok) {
         const data = await response.json();
-        setCount(data.newCount);  
+        setCount(data.newCount); // DB에서 받아온 참여 카운트
         setClicked(true);
         setShowPopup(true);
 
         const today = new Date().toISOString().split("T")[0];
         localStorage.setItem("lastClicked", today);
 
-        if (user && user.nickname) {
-          setNicknames((prevNicknames) => {
-            const updatedNicknames = [user.nickname, ...prevNicknames];
-            console.log("닉네임 추가됨:", updatedNicknames);
-            return updatedNicknames;
-          });
-        }
+        setNicknames((prevNicknames) => [user.nickname, ...prevNicknames]);
       } else {
-        alert("서버에서 문제가 발생했습니다.");
+        const errorData = await response.json();
+        alert(errorData.error || "서버 에러가 발생했습니다.");
       }
     } catch (error) {
+      console.error("네트워크 오류 발생:", error);
       alert("네트워크 오류가 발생했습니다.");
-      console.error("POST 요청 실패", error);
     }
   };
 
-  const toggleDarkMode = () => {
-    setDarkMode(!darkMode);
-  };
+  // 다크 모드 토글
+  const toggleDarkMode = () => setDarkMode(!darkMode);
 
+  // 로그아웃 처리
   const handleLogout = () => {
     localStorage.removeItem("user");
     const kakaoLogoutURL = `https://kauth.kakao.com/oauth/logout?client_id=${REST_API_KEY}&logout_redirect_uri=${LOGOUT_REDIRECT_URI}`;
@@ -110,10 +106,12 @@ export default function HomePage() {
         darkMode ? "bg-black text-white" : "bg-white text-black"
       }`}
     >
+      {/* 다크 모드 토글 버튼 */}
       <div className="fixed bottom-5 right-5 z-50">
         <DarkModeToggle darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
       </div>
 
+      {/* 공유 및 로그아웃 버튼 */}
       <div className="fixed top-5 right-5 z-50 flex space-x-4">
         <KakaoShareButton />
         <button
@@ -124,6 +122,7 @@ export default function HomePage() {
         </button>
       </div>
 
+      {/* 메인 이미지 및 추모 메시지 */}
       <section className="relative w-screen h-screen bg-stone-600">
         <div className="w-screen h-screen flex flex-col items-center justify-center bg-gray-200">
           <Image
@@ -133,12 +132,13 @@ export default function HomePage() {
             height={600}
             objectFit="contain"
           />
-          <h1 className="text-3xl font-bold mt-10 text-center text-black dark:text-black">
+          <h1 className="text-3xl font-bold mt-10 text-center">
             여객기 참사로 희생된 모든 분들을 깊이 추모합니다
           </h1>
         </div>
       </section>
 
+      {/* 추모 카운트와 버튼 */}
       <section className="p-10 text-center w-full">
         <p className="text-lg">추모 국화로 함께 애도해 주세요</p>
         <h2 className="text-4xl font-bold mt-5">
@@ -157,14 +157,16 @@ export default function HomePage() {
           </button>
         </a>
 
+        {/* 닉네임 롤러 */}
         <div className="pt-16 pb-16">
           <NicknameRoller nicknames={nicknames} />
         </div>
       </section>
 
+      {/* 추모 참여 팝업 */}
       {showPopup && (
         <div className="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-50">
-          <div className="bg-white p-10 rounded-lg shadow-lg text-center max-w-lg flex flex-col justify-center items-center">
+          <div className="bg-white p-10 rounded-lg shadow-lg text-center max-w-lg">
             <Image
               src="/images/flower.png"
               alt="국화 이미지"
@@ -175,10 +177,8 @@ export default function HomePage() {
               추모에 참여해주셔서 감사합니다
             </h2>
             <p className="text-gray-500 mt-4 text-sm leading-relaxed">
-              *참여 숫자는 카카오톡 ID 기준으로 1회만 집계되며, 추모 국화 달기는
-              중복 참여 가능합니다.
+              *참여 숫자는 카카오톡 ID 기준으로 1회만 집계됩니다.
             </p>
-          
             <button
               onClick={() => setShowPopup(false)}
               className="bg-black text-white px-8 py-3 mt-8 rounded-lg"

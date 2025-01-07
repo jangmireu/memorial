@@ -1,6 +1,6 @@
 // src/app/api/counter/route.ts
 
-let globalCount = 703055;  // 초기값 설정 (서버 메모리)
+let globalCount = 100;  // 초기값 설정 (서버 메모리)
 
 export async function POST() {
   globalCount += 1;
