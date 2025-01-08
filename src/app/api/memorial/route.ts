@@ -58,11 +58,15 @@ export async function GET() {
     const users = await prisma.user.findMany({
       select: { nickname: true },
     });
-
-    const nicknames = users.map((user) => user.nickname);
+    console.log("DB에서 가져온 사용자 닉네임:", users);
+    
+    // 닉네임 리스트가 없을 경우 빈 배열 반환
+    const nicknames = users.map((user) => user.nickname) || [];
     return NextResponse.json(nicknames, { status: 200 });
   } catch (error) {
     console.error("닉네임 로드 실패:", error);
+
+    // 명확한 JSON 객체 반환
     return NextResponse.json(
       { error: "서버 에러가 발생했습니다." },
       { status: 500 }
