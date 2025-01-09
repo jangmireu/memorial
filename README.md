@@ -117,10 +117,10 @@ npm start
 
 #### 배포 환경 그림
 
-<div align=center>
-    <img src=.src/public/images/vercel flowchart.png  width=80%  />
+<div align="center">
+    <img src="./public/images/vercel%20flowchart.png" width="80%" />
 </div>
-<br>
+
 
 > #### 📜 배포 과정 설명
 
