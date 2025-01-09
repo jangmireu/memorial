@@ -118,7 +118,7 @@ npm start
 #### 배포 환경 그림
 
 <div align=center>
-    <img src=./src/assets/images/deploy.png  width=80%  />
+    <img src=./public/images/vercel flowchart.png  width=80%  />
 </div>
 <br>
 
