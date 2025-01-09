@@ -63,40 +63,46 @@ npm start
 > #### 📁 프로젝트 구조
 
 ```js
-├─api             // 백엔드와 통신을 위한 API 모듈화 파일 모음
-│  ├─auth         // 인증 관련 API 모듈
-│  └─kakao        // 카카오 API 관련 파일
-├─app             // Next.js의 앱 라우팅 관련 디렉토리
-│  ├─api          // 서버와 관련된 API 라우팅
-│  │  └─auth/kakao // 카카오 인증 관련 API
-│  ├─login        // 로그인 페이지 및 관련 컴포넌트
-│  │  └─page.tsx  // 로그인 페이지 파일
-│  ├─main         // 메인 페이지 및 관련 컴포넌트
-│  │  └─page.tsx  // 메인 페이지 파일
-│  ├─layout.tsx   // 공통 레이아웃 파일
-│  └─page.tsx     // 루트 페이지 파일
-├─components      // 재사용 가능한 컴포넌트 모음
-│  ├─TearEffect   // 눈물 효과 관련 컴포넌트
-│  ├─DarkModeToggle // 다크모드 전환 버튼 컴포넌트
-│  ├─KakaoLoginButton // 카카오 로그인 버튼
-│  ├─KakaoLogoutButton // 카카오 로그아웃 버튼
-│  ├─KakaoShareButton // 카카오 공유 버튼
-│  ├─MemorialButton // 추모 관련 버튼
-│  └─NicknameRoller // 닉네임 롤링 컴포넌트
-├─fonts           // 프로젝트에 사용되는 폰트 파일
-│  ├─Danjo.otf    // 특정 폰트 파일
-│  ├─font1.ttf    // 폰트 파일
-│  └─font2.ttf    // 폰트 파일
-├─public          // 정적 파일 (이미지, 폰트 등)
-│  └─images       // 프로젝트에 사용되는 이미지 모음
-├─styles          // 전역 및 컴포넌트 스타일 정의
-│  └─globals.css  // 전역 CSS 스타일
-├─hooks           // Custom Hooks 모음
-├─utils           // 유틸리티 함수 모음
-├─.env            // 환경 변수 파일
-├─next.config.js  // Next.js 설정 파일
-├─package.json    // 프로젝트 종속성 및 설정
-└─README.md       // 프로젝트 설명 파일
+├─ .next                // Next.js 빌드 파일 디렉토리
+├─ node_modules         // 프로젝트 종속성 모음
+├─ public               // 정적 파일(이미지, 폰트 등)
+│  └─ images            // 이미지 파일 모음
+│     └─ flower.png     // 추모용 이미지 파일
+├─ src                  // 소스 코드 디렉토리
+│  ├─ app               // Next.js의 앱 라우팅 디렉토리
+│  │  ├─ api            // API 라우팅 파일
+│  │  │  ├─ auth/kakao  // 카카오 인증 관련 API
+│  │  │  └─ TS route.ts // 타입스크립트 라우팅 설정
+│  │  ├─ counter        // 카운터 관련 페이지 (추정)
+│  │  ├─ login          // 로그인 페이지
+│  │  │  └─ page.tsx    // 로그인 페이지 컴포넌트
+│  │  ├─ page.tsx       // 루트 페이지 파일
+│  │  ├─ globals.css    // 전역 스타일 파일
+│  │  └─ layout.tsx     // 공통 레이아웃 파일
+│  ├─ components        // 재사용 가능한 컴포넌트 모음
+│  │  ├─ TearEffect     // 눈물 효과 관련 컴포넌트
+│  │  ├─ TearBackground.tsx // 배경 관련 효과 컴포넌트
+│  │  ├─ DarkModeToggle.tsx // 다크 모드 토글 버튼
+│  │  ├─ KakaoLoginButton.tsx  // 카카오 로그인 버튼
+│  │  ├─ KakaoLogoutButton.tsx // 카카오 로그아웃 버튼
+│  │  ├─ KakaoShareButton.tsx  // 카카오 공유 버튼
+│  │  ├─ MemorialButton.tsx    // 추모 관련 버튼
+│  │  └─ NicknameRoller.tsx    // 닉네임 롤링 컴포넌트
+├─ fonts                // 프로젝트에 사용되는 폰트 파일
+│  ├─ Danjo.otf         // 특정 폰트 파일
+│  ├─ font.ttf          // 추가 폰트 파일
+│  └─ font1.ttf         // 추가 폰트 파일
+├─ .env                 // 환경 변수 파일
+├─ .env.local           // 로컬 환경 변수 파일
+├─ .gitignore           // Git에 포함하지 않을 파일 및 폴더
+├─ eslint.config.mjs    // ESLint 설정 파일
+├─ next-env.d.ts        // Next.js 타입 정의 파일
+├─ next.config.js       // Next.js 설정 파일
+├─ package-lock.json    // 프로젝트 의존성 잠금 파일
+├─ package.json         // 프로젝트 의존성 및 스크립트 설정
+├─ postcss.config.mjs   // Tailwind CSS 및 PostCSS 설정 파일
+├─ README.md            // 프로젝트 설명 파일
+
 
 ```
 
