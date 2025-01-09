@@ -124,6 +124,6 @@ npm start
 
 > #### 📜 배포 과정 설명
 
-1. 개발이 완료된 `main branch`에서 deploy를 진행 합니다.
-2. Vecel에서 제공하는 cli를 이용하여 빌드된 리액트 프로젝트를 s3에 배포합니다.
-3. 배포가 완료되고 사용자는 `CloudFront`를 통해 배포된 사이트([velogClone 사이트](https://d3kinchzmkbtue.cloudfront.net))를 접속합니다.
+1. 개발이 완료된 main 브랜치에서 Vercel을 이용해 배포를 진행합니다.
+2. Vercel은 GitHub와 연동되어 있어, main 브랜치에 코드가 푸시되면 자동으로 빌드 및 배포가 이루어집니다.
+3. 배포가 완료되면 사용자는 Vercel에서 제공하는 도메인을 통해 배포된 사이트([추모 게시판](https://jpmemorial-project.vercel.app/))에 접속할 수 있습니다.
