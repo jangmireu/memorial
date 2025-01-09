@@ -22,8 +22,6 @@
 ### 🙎‍♂️ 팀 구성 
 |장미르|박진우|
 | :---: | :---: |
-|![](https://github.com/dnr14.png?size=200)|![](https://github.com/dalping.png?size=200)
-|[dnr14](https://github.com/dnr14)|[dalping](https://github.com/dalping)
 |Front-End|Front-End|Back-End|Back-End|
 
 - 프론트엔드 개발자 2명
