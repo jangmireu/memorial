@@ -4,10 +4,9 @@
 
 <div align=center>
     <img src="https://img.shields.io/badge/17.0.2-React-61DAFB?style=flat&logo=react&logoColor=61DAFB"/>
-    <img src="https://img.shields.io/badge/5.61.0-Webpack-8DD6F9?style=flat&logo=webpack&logoColor=8DD6F9"/>
-    <img src="https://img.shields.io/badge/5.3.0-React router dom-CA4245?style=flat&logo=react router&logoColor=CA4245"/>
-    <img src="https://img.shields.io/badge/7.2.6-Redux-764ABC?style=flat&logo=redux&logoColor=764ABC"/>
-    <img src="https://img.shields.io/badge/5.3.3-Styled components-DB7093?style=flat&logo=styled-components&logoColor=DB7093"/>
+    <img src="https://img.shields.io/badge/Typescript-3178C6?style=flat-square&logo=Typescript&logoColor=white"/>
+    <img src="https://img.shields.io/badge/Tailwind CSS-06B6D4?style=flat-square&logo=Tailwind CSS&logoColor=white"/>
+    <img src="https://img.shields.io/badge/Vercel-000000?style=flat-square&logo=Vercel&logoColor=white"/>
     <img src="https://img.shields.io/badge/7.32.0-Eslint-4B32C3?style=flat&logo=eslint&logoColor=4B32C3"/>
     <img src="https://img.shields.io/badge/2.4.1-Prettier-F7B93E?style=flat&logo=Prettier&logoColor=F7B93E"/>
 </div>
@@ -112,8 +111,6 @@ npm start
   - 개발 진행 상황 공유하기 위해 사용했습니다.
 - Git, Github
   - 코드 버전 관리 및 공유하기 위해 사용했습니다.
-
-
 <hr/>
 
 # 3. 배포 👨‍🔧
@@ -128,5 +125,5 @@ npm start
 > #### 📜 배포 과정 설명
 
 1. 개발이 완료된 `main branch`에서 deploy를 진행 합니다.
-2. aws에서 제공하는 cli를 이용하여 빌드된 리액트 프로젝트를 s3에 배포합니다.
+2. Vecel에서 제공하는 cli를 이용하여 빌드된 리액트 프로젝트를 s3에 배포합니다.
 3. 배포가 완료되고 사용자는 `CloudFront`를 통해 배포된 사이트([velogClone 사이트](https://d3kinchzmkbtue.cloudfront.net))를 접속합니다.
